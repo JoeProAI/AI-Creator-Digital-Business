@@ -67,29 +67,67 @@ async function fetchSheetData(sheetName: string, range: string = 'A:Z'): Promise
 export async function getCreatorRoster(): Promise<Creator[]> {
   const data = await fetchSheetData(SHEETS.ROSTER);
 
-  if (data.length <= 1) return []; // Only header row or empty
+  if (data.length < 5) return []; // Need at least header row (4) + 1 data row
 
-  // Skip header row and filter out empty/invalid rows
+  // Find the header row (contains "User Name" in some column)
+  const headerRowIndex = data.findIndex(row =>
+    row.some(cell => cell && cell.toLowerCase().includes('user name'))
+  );
+
+  if (headerRowIndex === -1) return []; // No header found
+
+  // Find column indices based on header row
+  const headerRow = data[headerRowIndex];
+  const findCol = (pattern: string) =>
+    headerRow.findIndex(cell => cell && cell.toLowerCase().includes(pattern));
+
+  const cols = {
+    userName: findCol('user name'),
+    handle: findCol('handel') !== -1 ? findCol('handel') : findCol('handle'),
+    contentType: findCol('type of content'),
+    focusArea: findCol('focus area'),
+    openForCollab: findCol('open for collabor'),
+    collabExpectations: findCol('describe what type'),
+    collabTopics: findCol('what type of collabor'),
+    specialties: findCol('specialities') !== -1 ? findCol('specialities') : findCol('specialties'),
+    willingToFacilitate: findCol('willing to lead'),
+    issue: findCol('issue'),
+    proposedSolution: findCol('proposed solution'),
+  };
+
+  // Process data rows (everything after header)
   return data
-    .slice(1)
+    .slice(headerRowIndex + 1)
     .filter((row) => {
-      // Must have at least a username or handle with actual content
-      const hasUserName = row[0] && row[0].trim() !== '' && !row[0].includes('User Name');
-      const hasHandle = row[1] && row[1].trim() !== '' && !row[1].includes('Handel') && !row[1].includes('Handle');
-      return hasUserName || hasHandle;
+      // Must have actual content in username or handle columns
+      const userName = cols.userName >= 0 ? row[cols.userName] : '';
+      const handle = cols.handle >= 0 ? row[cols.handle] : '';
+
+      const hasUserName = userName && userName.trim() !== '' &&
+        !userName.toLowerCase().includes('user name');
+      const hasHandle = handle && handle.trim() !== '' &&
+        !handle.toLowerCase().includes('handel') &&
+        !handle.toLowerCase().includes('handle');
+
+      // Also check it's not just a row with only "FALSE" values
+      const hasRealContent = row.some(cell =>
+        cell && cell.trim() !== '' && cell.trim().toUpperCase() !== 'FALSE'
+      );
+
+      return (hasUserName || hasHandle) && hasRealContent;
     })
     .map((row) => ({
-      userName: row[0] || '',
-      handle: row[1] || '',
-      contentType: row[2] || '',
-      focusArea: row[3] || '',
-      openForCollab: row[4] || '',
-      collabExpectations: row[5] || '',
-      collabTopics: row[6] || '',
-      specialties: row[7] || '',
-      willingToFacilitate: row[8] || '',
-      issue: row[9] || '',
-      proposedSolution: row[10] || '',
+      userName: cols.userName >= 0 ? row[cols.userName] || '' : '',
+      handle: cols.handle >= 0 ? row[cols.handle] || '' : '',
+      contentType: cols.contentType >= 0 ? row[cols.contentType] || '' : '',
+      focusArea: cols.focusArea >= 0 ? row[cols.focusArea] || '' : '',
+      openForCollab: cols.openForCollab >= 0 ? row[cols.openForCollab] || '' : '',
+      collabExpectations: cols.collabExpectations >= 0 ? row[cols.collabExpectations] || '' : '',
+      collabTopics: cols.collabTopics >= 0 ? row[cols.collabTopics] || '' : '',
+      specialties: cols.specialties >= 0 ? row[cols.specialties] || '' : '',
+      willingToFacilitate: cols.willingToFacilitate >= 0 ? row[cols.willingToFacilitate] || '' : '',
+      issue: cols.issue >= 0 ? row[cols.issue] || '' : '',
+      proposedSolution: cols.proposedSolution >= 0 ? row[cols.proposedSolution] || '' : '',
     }));
 }
 
@@ -104,10 +142,23 @@ export async function getSheetStats(): Promise<SheetStats> {
     fetchSheetData(SHEETS.VISION),
   ]);
 
-  // Filter out header rows and empty rows for counts
+  // Filter out header rows, empty rows, and rows with only FALSE values
   const countValidRows = (data: string[][]) => {
     if (data.length <= 1) return 0;
-    return data.slice(1).filter(row => row.some(cell => cell && cell.trim() !== '')).length;
+    // Find header row index
+    const headerIdx = data.findIndex(row =>
+      row.some(cell => cell && (
+        cell.toLowerCase().includes('timestamp') ||
+        cell.toLowerCase().includes('user name') ||
+        cell.toLowerCase().includes('response')
+      ))
+    );
+    const startIdx = headerIdx >= 0 ? headerIdx + 1 : 1;
+    return data.slice(startIdx).filter(row =>
+      row.some(cell =>
+        cell && cell.trim() !== '' && cell.trim().toUpperCase() !== 'FALSE'
+      )
+    ).length;
   };
 
   return {
