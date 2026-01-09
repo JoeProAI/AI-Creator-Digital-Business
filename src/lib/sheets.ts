@@ -3,14 +3,16 @@
 const SHEET_ID = process.env.NEXT_PUBLIC_GOOGLE_SHEET_ID || '1V9uYRt5ObBET5T9CkAaG7qbM8qJUlvZeT7zeG_XXs2M';
 const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_SHEETS_API_KEY;
 
-// Sheet tab names - try without emojis first, fallback encoded
+// Sheet tab names - exact match with emojis as they appear in the sheet
 const SHEETS = {
-  ROSTER: 'Creator Roster',
-  FEEDBACK: 'Feedback Responses',
-  TIPS: 'Tips Responses',
-  VISION: 'Vision Responses',
-  SCHEDULE: 'Schedule',
-  MATCHUP: 'Match Up for Collaborations',
+  ROSTER: 'Creator Roster 🧑‍🦲📋',
+  FEEDBACK: 'Feedback Responses 🔥',
+  TIPS: 'Tips Responses 💡',
+  VISION: 'Vision Responses 🎨',
+  SCHEDULE: 'Schedule 🗓️',
+  MATCHUP: 'Match Up for Collaborations 🤝',
+  DASHBOARD: 'Dashboard 🪐',
+  SHEET_FEEDBACK: 'Feedback for this sheet 📣',
 } as const;
 
 export interface Creator {
