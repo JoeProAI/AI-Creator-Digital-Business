@@ -100,21 +100,34 @@ export async function getCreatorRoster(): Promise<Creator[]> {
     .slice(headerRowIndex + 1)
     .filter((row) => {
       // Must have actual content in username or handle columns
-      const userName = cols.userName >= 0 ? row[cols.userName] : '';
-      const handle = cols.handle >= 0 ? row[cols.handle] : '';
+      const userName = (cols.userName >= 0 ? row[cols.userName] : '') || '';
+      const handle = (cols.handle >= 0 ? row[cols.handle] : '') || '';
 
-      const hasUserName = userName && userName.trim() !== '' &&
-        !userName.toLowerCase().includes('user name');
-      const hasHandle = handle && handle.trim() !== '' &&
+      // Valid username: has letters/numbers, not just emojis or special chars
+      const hasValidUserName = userName.trim() !== '' &&
+        !userName.toLowerCase().includes('user name') &&
+        !userName.toLowerCase().includes('creator roster') &&
+        /[a-zA-Z0-9]/.test(userName); // Must contain at least one alphanumeric
+
+      // Valid handle: has letters/numbers (typically @username format)
+      const hasValidHandle = handle.trim() !== '' &&
         !handle.toLowerCase().includes('handel') &&
-        !handle.toLowerCase().includes('handle');
+        !handle.toLowerCase().includes('handle') &&
+        /[a-zA-Z0-9]/.test(handle);
 
-      // Also check it's not just a row with only "FALSE" values
-      const hasRealContent = row.some(cell =>
-        cell && cell.trim() !== '' && cell.trim().toUpperCase() !== 'FALSE'
-      );
+      // Must have at least one valid identifier
+      if (!hasValidUserName && !hasValidHandle) return false;
 
-      return (hasUserName || hasHandle) && hasRealContent;
+      // Check it's not just a row with only "FALSE" values or emojis
+      const hasRealContent = row.some(cell => {
+        if (!cell || cell.trim() === '') return false;
+        const trimmed = cell.trim().toUpperCase();
+        if (trimmed === 'FALSE') return false;
+        // Must have alphanumeric content, not just emojis
+        return /[a-zA-Z0-9]/.test(cell);
+      });
+
+      return hasRealContent;
     })
     .map((row) => ({
       userName: cols.userName >= 0 ? row[cols.userName] || '' : '',
