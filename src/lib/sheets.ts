@@ -103,28 +103,23 @@ export async function getCreatorRoster(): Promise<Creator[]> {
       const userName = (cols.userName >= 0 ? row[cols.userName] : '') || '';
       const handle = (cols.handle >= 0 ? row[cols.handle] : '') || '';
 
-      // Valid username: has letters/numbers, not just emojis or special chars
+      // Valid username: not empty and not header text
       const hasValidUserName = userName.trim() !== '' &&
         !userName.toLowerCase().includes('user name') &&
-        !userName.toLowerCase().includes('creator roster') &&
-        /[a-zA-Z0-9]/.test(userName); // Must contain at least one alphanumeric
+        !userName.toLowerCase().includes('creator roster');
 
-      // Valid handle: has letters/numbers (typically @username format)
+      // Valid handle: not empty and not header text
       const hasValidHandle = handle.trim() !== '' &&
         !handle.toLowerCase().includes('handel') &&
-        !handle.toLowerCase().includes('handle') &&
-        /[a-zA-Z0-9]/.test(handle);
+        !handle.toLowerCase().includes('handle');
 
       // Must have at least one valid identifier
       if (!hasValidUserName && !hasValidHandle) return false;
 
-      // Check it's not just a row with only "FALSE" values or emojis
+      // Check row has real content beyond just "FALSE" checkbox defaults
       const hasRealContent = row.some(cell => {
         if (!cell || cell.trim() === '') return false;
-        const trimmed = cell.trim().toUpperCase();
-        if (trimmed === 'FALSE') return false;
-        // Must have alphanumeric content, not just emojis
-        return /[a-zA-Z0-9]/.test(cell);
+        return cell.trim().toUpperCase() !== 'FALSE';
       });
 
       return hasRealContent;
