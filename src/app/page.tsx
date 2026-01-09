@@ -64,11 +64,11 @@ export default function Home() {
           <div className="flex items-center justify-between h-16 md:h-20">
             <div className={`flex items-center gap-[var(--space-3)] ${isLoaded ? 'animate-slide-in' : 'will-animate'}`}>
               <div className="w-10 h-10 bg-[var(--color-text)] flex items-center justify-center hover-glitch">
-                <span className="text-[var(--color-bg)] font-bold text-lg font-display">A</span>
+                <span className="text-[var(--color-bg)] font-bold text-lg font-display">C</span>
               </div>
               <div className="hidden sm:block">
                 <span className="text-[var(--text-sm)] uppercase tracking-[0.15em] font-semibold">
-                  AI Digital Creator Hub
+                  COX Coop
                 </span>
                 <div className="flex items-center gap-2 text-[var(--text-xs)] text-[var(--color-muted)]">
                   <span className="w-1.5 h-1.5 bg-[var(--color-success)] animate-pulse" />
@@ -117,12 +117,11 @@ export default function Home() {
                 Est. 2025
               </span>
               <h1 className={`font-display text-[clamp(2.5rem,8vw,6rem)] leading-[0.9] tracking-[-0.02em] mb-[var(--space-4)] ${isLoaded ? 'animate-slide-up delay-1' : 'will-animate'}`}>
-                <span className="hover-glitch inline-block">AI</span> Digital<br />
-                <span className="italic">Creator</span><br />
-                Hub
+                <span className="hover-glitch inline-block">COX</span><br />
+                <span className="italic">Coop</span>
               </h1>
               <p className={`text-[var(--text-lg)] text-[var(--color-muted)] max-w-[500px] leading-relaxed ${isLoaded ? 'animate-slide-up delay-2' : 'will-animate'}`}>
-                A collective space for digital creators. Share problems with solutions.
+                The digital creator cooperative. Share problems with solutions.
                 Exchange knowledge. Build accountability. Nothing advances without action.
               </p>
 
@@ -363,11 +362,11 @@ export default function Home() {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-[var(--space-4)]">
             <div className="flex items-center gap-[var(--space-3)]">
               <div className="w-8 h-8 bg-[var(--color-text)] flex items-center justify-center">
-                <span className="text-[var(--color-bg)] font-bold text-sm font-display">A</span>
+                <span className="text-[var(--color-bg)] font-bold text-sm font-display">C</span>
               </div>
               <div>
                 <span className="text-[var(--text-xs)] uppercase tracking-[0.15em] block">
-                  AI Digital Creator Hub
+                  COX Coop
                 </span>
                 <span className="text-[var(--text-xs)] text-[var(--color-muted)]">
                   {new Date().getFullYear()}
