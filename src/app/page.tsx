@@ -4,7 +4,29 @@ import { useEffect, useRef, useState } from 'react';
 
 export default function Home() {
   const [passedSections, setPassedSections] = useState<Set<string>>(new Set());
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [currentTime, setCurrentTime] = useState('');
   const sectionsRef = useRef<Map<string, HTMLElement>>(new Map());
+
+  // Trigger entrance animations on mount
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
+
+  // Live clock for that "alive" feel
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      setCurrentTime(now.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      }));
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Signature element: Track scroll position to thicken section borders
   useEffect(() => {
@@ -40,71 +62,111 @@ export default function Home() {
       <header className="border-b-[4px] border-[var(--color-border)] bg-[var(--color-surface)] sticky top-0 z-50">
         <div className="max-w-[1400px] mx-auto px-[var(--space-4)] md:px-[var(--space-6)]">
           <div className="flex items-center justify-between h-16 md:h-20">
-            <div className="flex items-center gap-[var(--space-3)]">
-              <div className="w-10 h-10 bg-[var(--color-text)] flex items-center justify-center">
-                <span className="text-[var(--color-bg)] font-bold text-lg font-display">C</span>
+            <div className={`flex items-center gap-[var(--space-3)] ${isLoaded ? 'animate-slide-in' : 'will-animate'}`}>
+              <div className="w-10 h-10 bg-[var(--color-text)] flex items-center justify-center hover-glitch">
+                <span className="text-[var(--color-bg)] font-bold text-lg font-display">A</span>
               </div>
-              <span className="text-[var(--text-sm)] uppercase tracking-[0.2em] font-semibold hidden sm:block">
-                Creator Hub
-              </span>
+              <div className="hidden sm:block">
+                <span className="text-[var(--text-sm)] uppercase tracking-[0.15em] font-semibold">
+                  AI Digital Creator Hub
+                </span>
+                <div className="flex items-center gap-2 text-[var(--text-xs)] text-[var(--color-muted)]">
+                  <span className="w-1.5 h-1.5 bg-[var(--color-success)] animate-pulse" />
+                  <span>Live</span>
+                  <span className="animate-ticker">{currentTime}</span>
+                </div>
+              </div>
             </div>
 
-            <nav className="hidden md:flex items-center gap-[var(--space-6)]">
-              <a href="#feedback" className="text-[var(--text-sm)] uppercase tracking-widest hover:text-[var(--color-accent)] transition-colors">
+            <nav className={`hidden md:flex items-center gap-[var(--space-6)] ${isLoaded ? 'animate-fade-in delay-2' : 'will-animate'}`}>
+              <a href="#feedback" className="text-[var(--text-sm)] uppercase tracking-widest hover-underline">
                 Feedback
               </a>
-              <a href="#tips" className="text-[var(--text-sm)] uppercase tracking-widest hover:text-[var(--color-accent)] transition-colors">
+              <a href="#tips" className="text-[var(--text-sm)] uppercase tracking-widest hover-underline">
                 Tips
               </a>
-              <a href="#vision" className="text-[var(--text-sm)] uppercase tracking-widest hover:text-[var(--color-accent)] transition-colors">
+              <a href="#vision" className="text-[var(--text-sm)] uppercase tracking-widest hover-underline">
                 Vision
               </a>
             </nav>
 
-            <button className="brutal-btn brutal-btn-primary">
+            <button className={`brutal-btn brutal-btn-primary ${isLoaded ? 'animate-slide-in delay-3' : 'will-animate'}`}>
               Submit
             </button>
           </div>
         </div>
       </header>
 
+      {/* Marquee - Adds motion and life */}
+      <div className="bg-[var(--color-text)] text-[var(--color-bg)] py-2 overflow-hidden border-b-[2px] border-[var(--color-border)]">
+        <div className="animate-marquee whitespace-nowrap flex">
+          {[...Array(2)].map((_, i) => (
+            <span key={i} className="text-[var(--text-xs)] uppercase tracking-[0.3em] mx-8">
+              Problems need solutions &bull; Share your knowledge &bull; Build accountability &bull; Connect with creators &bull; Nothing moves without action &bull; Join the COX Coop &bull;&nbsp;
+            </span>
+          ))}
+        </div>
+      </div>
+
       {/* Hero - Typographic authority */}
       <section className="border-b-[4px] border-[var(--color-border)]">
         <div className="max-w-[1400px] mx-auto px-[var(--space-4)] md:px-[var(--space-6)] py-[var(--space-12)] md:py-[calc(var(--space-12)*1.5)]">
           <div className="grid md:grid-cols-[2fr_1fr] gap-[var(--space-8)] items-end">
             <div>
-              <span className="brutal-label brutal-label-accent mb-[var(--space-4)] inline-block">
+              <span className={`brutal-label brutal-label-accent mb-[var(--space-4)] inline-block ${isLoaded ? 'animate-slide-up' : 'will-animate'}`}>
                 Est. 2025
               </span>
-              <h1 className="font-display text-[clamp(2.5rem,8vw,6rem)] leading-[0.9] tracking-[-0.02em] mb-[var(--space-4)]">
-                Creator<br />
-                <span className="italic">Digital</span><br />
-                Business
+              <h1 className={`font-display text-[clamp(2.5rem,8vw,6rem)] leading-[0.9] tracking-[-0.02em] mb-[var(--space-4)] ${isLoaded ? 'animate-slide-up delay-1' : 'will-animate'}`}>
+                <span className="hover-glitch inline-block">AI</span> Digital<br />
+                <span className="italic">Creator</span><br />
+                Hub
               </h1>
-              <p className="text-[var(--text-lg)] text-[var(--color-muted)] max-w-[500px] leading-relaxed">
+              <p className={`text-[var(--text-lg)] text-[var(--color-muted)] max-w-[500px] leading-relaxed ${isLoaded ? 'animate-slide-up delay-2' : 'will-animate'}`}>
                 A collective space for digital creators. Share problems with solutions.
                 Exchange knowledge. Build accountability. Nothing advances without action.
               </p>
+
+              <div className={`flex flex-wrap gap-[var(--space-3)] mt-[var(--space-6)] ${isLoaded ? 'animate-slide-up delay-3' : 'will-animate'}`}>
+                <button className="brutal-btn brutal-btn-primary">
+                  Get Started
+                </button>
+                <button className="brutal-btn">
+                  View Dashboard
+                </button>
+              </div>
             </div>
 
-            <div className="brutal-card brutal-shadow-lg">
-              <div className="text-[var(--text-xs)] uppercase tracking-[0.2em] text-[var(--color-muted)] mb-[var(--space-2)]">
-                Status
+            <div className={`brutal-card brutal-shadow-lg animate-border-pulse ${isLoaded ? 'animate-slide-up delay-4' : 'will-animate'}`}>
+              <div className="flex items-center justify-between mb-[var(--space-2)]">
+                <div className="text-[var(--text-xs)] uppercase tracking-[0.2em] text-[var(--color-muted)]">
+                  Status
+                </div>
+                <div className="flex items-center gap-1">
+                  <span className="w-2 h-2 bg-[var(--color-success)] animate-pulse" />
+                  <span className="text-[var(--text-xs)] text-[var(--color-success)]">Online</span>
+                </div>
               </div>
-              <div className="brutal-stat text-[var(--color-accent)]">0</div>
+              <div className="brutal-stat text-[var(--color-accent)] counter-animate">0</div>
               <div className="text-[var(--text-sm)] mt-[var(--space-2)]">Active creators</div>
 
               <div className="h-[2px] bg-[var(--color-border)] my-[var(--space-4)]" />
 
               <div className="grid grid-cols-2 gap-[var(--space-4)]">
-                <div>
-                  <div className="text-[var(--text-2xl)] font-display">0</div>
+                <div className="hover-lift cursor-default">
+                  <div className="text-[var(--text-2xl)] font-display counter-animate">0</div>
                   <div className="text-[var(--text-xs)] uppercase tracking-widest text-[var(--color-muted)]">Submissions</div>
                 </div>
-                <div>
-                  <div className="text-[var(--text-2xl)] font-display">0</div>
+                <div className="hover-lift cursor-default">
+                  <div className="text-[var(--text-2xl)] font-display counter-animate">0</div>
                   <div className="text-[var(--text-xs)] uppercase tracking-widest text-[var(--color-muted)]">Solutions</div>
                 </div>
+              </div>
+
+              <div className="h-[2px] bg-[var(--color-border)] my-[var(--space-4)]" />
+
+              <div className="text-[var(--text-xs)] text-[var(--color-muted)] flex items-center justify-between">
+                <span>Last updated</span>
+                <span className="font-semibold">Just now</span>
               </div>
             </div>
           </div>
@@ -120,21 +182,22 @@ export default function Home() {
               id="feedback"
               ref={registerSection('01')}
               data-section="01"
-              className={`section-marker p-[var(--space-6)] ${passedSections.has('01') ? 'is-passed' : ''}`}
+              className={`section-marker p-[var(--space-6)] group ${passedSections.has('01') ? 'is-passed' : ''}`}
             >
-              <div className="text-[var(--text-xs)] uppercase tracking-[0.3em] text-[var(--color-muted)] mb-[var(--space-3)]">
-                01 / Feedback
+              <div className="text-[var(--text-xs)] uppercase tracking-[0.3em] text-[var(--color-muted)] mb-[var(--space-3)] flex items-center justify-between">
+                <span>01 / Feedback</span>
+                <span className="w-8 h-[2px] bg-[var(--color-border)] group-hover:bg-[var(--color-accent)] group-hover:w-12 transition-all" />
               </div>
-              <h2 className="font-display text-[var(--text-2xl)] mb-[var(--space-3)]">
+              <h2 className="font-display text-[var(--text-2xl)] mb-[var(--space-3)] group-hover:translate-x-1 transition-transform">
                 Problems<br />&amp; Solutions
               </h2>
               <p className="text-[var(--color-muted)] mb-[var(--space-6)] leading-relaxed">
                 Submit issues paired with proposed fixes. No complaint advances without a path forward.
-                Weekly themed submissions to the collective.
+                Weekly themed submissions to the COX Coop.
               </p>
-              <button className="brutal-btn w-full justify-between group">
+              <button className="brutal-btn w-full justify-between group/btn">
                 <span>Submit feedback</span>
-                <span className="transform group-hover:translate-x-1 transition-transform">&rarr;</span>
+                <span className="transform group-hover/btn:translate-x-2 transition-transform">&rarr;</span>
               </button>
             </article>
 
@@ -143,21 +206,22 @@ export default function Home() {
               id="tips"
               ref={registerSection('02')}
               data-section="02"
-              className={`section-marker p-[var(--space-6)] ${passedSections.has('02') ? 'is-passed' : ''}`}
+              className={`section-marker p-[var(--space-6)] group ${passedSections.has('02') ? 'is-passed' : ''}`}
             >
-              <div className="text-[var(--text-xs)] uppercase tracking-[0.3em] text-[var(--color-muted)] mb-[var(--space-3)]">
-                02 / Knowledge
+              <div className="text-[var(--text-xs)] uppercase tracking-[0.3em] text-[var(--color-muted)] mb-[var(--space-3)] flex items-center justify-between">
+                <span>02 / Knowledge</span>
+                <span className="w-8 h-[2px] bg-[var(--color-border)] group-hover:bg-[var(--color-accent)] group-hover:w-12 transition-all" />
               </div>
-              <h2 className="font-display text-[var(--text-2xl)] mb-[var(--space-3)]">
+              <h2 className="font-display text-[var(--text-2xl)] mb-[var(--space-3)] group-hover:translate-x-1 transition-transform">
                 Tips<br />&amp; Tricks
               </h2>
               <p className="text-[var(--color-muted)] mb-[var(--space-6)] leading-relaxed">
                 Share what works. Platform expertise, workflow optimizations, tool configurations.
-                Inform collective planning through shared intelligence.
+                Inform COX Coop planning through shared intelligence.
               </p>
-              <button className="brutal-btn w-full justify-between group">
+              <button className="brutal-btn w-full justify-between group/btn">
                 <span>Share knowledge</span>
-                <span className="transform group-hover:translate-x-1 transition-transform">&rarr;</span>
+                <span className="transform group-hover/btn:translate-x-2 transition-transform">&rarr;</span>
               </button>
             </article>
 
@@ -166,21 +230,22 @@ export default function Home() {
               id="vision"
               ref={registerSection('03')}
               data-section="03"
-              className={`section-marker p-[var(--space-6)] ${passedSections.has('03') ? 'is-passed' : ''}`}
+              className={`section-marker p-[var(--space-6)] group ${passedSections.has('03') ? 'is-passed' : ''}`}
             >
-              <div className="text-[var(--text-xs)] uppercase tracking-[0.3em] text-[var(--color-muted)] mb-[var(--space-3)]">
-                03 / Accountability
+              <div className="text-[var(--text-xs)] uppercase tracking-[0.3em] text-[var(--color-muted)] mb-[var(--space-3)] flex items-center justify-between">
+                <span>03 / Accountability</span>
+                <span className="w-8 h-[2px] bg-[var(--color-border)] group-hover:bg-[var(--color-accent)] group-hover:w-12 transition-all" />
               </div>
-              <h2 className="font-display text-[var(--text-2xl)] mb-[var(--space-3)]">
+              <h2 className="font-display text-[var(--text-2xl)] mb-[var(--space-3)] group-hover:translate-x-1 transition-transform">
                 Vision<br />Board
               </h2>
               <p className="text-[var(--color-muted)] mb-[var(--space-6)] leading-relaxed">
                 Declare intentions publicly. Find partners. Track progress together.
                 Shared commitment creates momentum.
               </p>
-              <button className="brutal-btn w-full justify-between group">
+              <button className="brutal-btn w-full justify-between group/btn">
                 <span>Set your vision</span>
-                <span className="transform group-hover:translate-x-1 transition-transform">&rarr;</span>
+                <span className="transform group-hover/btn:translate-x-2 transition-transform">&rarr;</span>
               </button>
             </article>
           </div>
@@ -200,25 +265,26 @@ export default function Home() {
 
           <div className="flex flex-wrap gap-[var(--space-2)]">
             {[
-              { name: 'Written Content', code: 'WRT' },
-              { name: 'Digital Music', code: 'MUS' },
-              { name: 'Digital Image', code: 'IMG' },
-              { name: 'Video / Animation', code: 'VID' },
-              { name: 'Software & Dev', code: 'DEV' },
-              { name: 'Organization', code: 'ORG' },
-              { name: 'Education', code: 'EDU' },
-              { name: 'Digital Business', code: 'BIZ' },
-              { name: 'Marketing & PR', code: 'MKT' },
-              { name: 'Voice / Audio', code: 'AUD' },
-              { name: 'Automation', code: 'AUT' },
-              { name: 'Other', code: '...' },
+              { name: 'Written Content', code: 'WRT', hot: false },
+              { name: 'Digital Music', code: 'MUS', hot: true },
+              { name: 'Digital Image', code: 'IMG', hot: true },
+              { name: 'Video / Animation', code: 'VID', hot: true },
+              { name: 'Software & Dev', code: 'DEV', hot: false },
+              { name: 'Organization', code: 'ORG', hot: false },
+              { name: 'Education', code: 'EDU', hot: true },
+              { name: 'Digital Business', code: 'BIZ', hot: false },
+              { name: 'Marketing & PR', code: 'MKT', hot: false },
+              { name: 'Voice / Audio', code: 'AUD', hot: false },
+              { name: 'Automation', code: 'AUT', hot: false },
+              { name: 'Other', code: '...', hot: false },
             ].map((cat) => (
               <button
                 key={cat.code}
-                className="brutal-btn text-[var(--text-xs)] py-[var(--space-2)] px-[var(--space-3)]"
+                className={`brutal-btn text-[var(--text-xs)] py-[var(--space-2)] px-[var(--space-3)] ${cat.hot ? 'border-[var(--color-accent)]' : ''}`}
               >
-                <span className="text-[var(--color-muted)]">[{cat.code}]</span>
+                <span className={cat.hot ? 'text-[var(--color-accent)]' : 'text-[var(--color-muted)]'}>[{cat.code}]</span>
                 <span>{cat.name}</span>
+                {cat.hot && <span className="w-1.5 h-1.5 bg-[var(--color-accent)] animate-pulse" />}
               </button>
             ))}
           </div>
@@ -228,23 +294,35 @@ export default function Home() {
       {/* How it Works - Sequential */}
       <section className="border-b-[4px] border-[var(--color-border)]">
         <div className="max-w-[1400px] mx-auto px-[var(--space-4)] md:px-[var(--space-6)] py-[var(--space-8)]">
-          <h2 className="font-display text-[var(--text-xl)] mb-[var(--space-6)]">Process</h2>
+          <div className="flex items-center justify-between mb-[var(--space-6)]">
+            <h2 className="font-display text-[var(--text-xl)]">Process</h2>
+            <span className="text-[var(--text-xs)] uppercase tracking-widest text-[var(--color-muted)]">4 steps</span>
+          </div>
 
           <div className="grid md:grid-cols-4 gap-[var(--space-4)]">
             {[
-              { step: '01', title: 'Submit', desc: 'Share feedback with a solution, tip, or vision goal via form.' },
-              { step: '02', title: 'Collect', desc: 'Data flows to organized sheets. Categories parsed automatically.' },
-              { step: '03', title: 'Review', desc: 'Weekly themed batches presented to the collective.' },
-              { step: '04', title: 'Connect', desc: 'Matching creators found. Accountability partnerships formed.' },
-            ].map((item) => (
-              <div key={item.step} className="relative">
-                <div className="text-[var(--text-hero)] font-display text-[var(--color-border)] opacity-20 absolute -top-4 -left-2">
+              { step: '01', title: 'Submit', desc: 'Share feedback with a solution, tip, or vision goal via form.', active: true },
+              { step: '02', title: 'Collect', desc: 'Data flows to organized sheets. Categories parsed automatically.', active: false },
+              { step: '03', title: 'Review', desc: 'Weekly themed batches presented to the COX Coop.', active: false },
+              { step: '04', title: 'Connect', desc: 'Matching creators found. Accountability partnerships formed.', active: false },
+            ].map((item, index) => (
+              <div
+                key={item.step}
+                className={`relative group hover-lift cursor-default ${item.active ? 'brutal-card brutal-shadow' : ''}`}
+              >
+                <div className={`text-[var(--text-hero)] font-display opacity-20 absolute -top-4 -left-2 transition-colors ${item.active ? 'text-[var(--color-accent)]' : 'text-[var(--color-border)]'} group-hover:text-[var(--color-accent)]`}>
                   {item.step}
                 </div>
                 <div className="relative pt-[var(--space-8)]">
-                  <h3 className="text-[var(--text-lg)] font-semibold mb-[var(--space-2)]">{item.title}</h3>
+                  <div className="flex items-center gap-2 mb-[var(--space-2)]">
+                    <h3 className="text-[var(--text-lg)] font-semibold">{item.title}</h3>
+                    {item.active && <span className="brutal-label brutal-label-accent text-[10px]">Current</span>}
+                  </div>
                   <p className="text-[var(--text-sm)] text-[var(--color-muted)] leading-relaxed">{item.desc}</p>
                 </div>
+                {index < 3 && (
+                  <div className="hidden md:block absolute top-1/2 -right-[var(--space-2)] w-[var(--space-4)] h-[2px] bg-[var(--color-border)]" />
+                )}
               </div>
             ))}
           </div>
@@ -256,16 +334,19 @@ export default function Home() {
         <div className="max-w-[1400px] mx-auto px-[var(--space-4)] md:px-[var(--space-6)] py-[var(--space-12)]">
           <div className="grid md:grid-cols-2 gap-[var(--space-8)] items-center">
             <div>
+              <div className="text-[var(--text-xs)] uppercase tracking-[0.3em] opacity-50 mb-[var(--space-3)]">
+                Join the COX Coop
+              </div>
               <h2 className="font-display text-[clamp(2rem,5vw,3.5rem)] leading-[1] mb-[var(--space-4)]">
                 Ready to<br />contribute?
               </h2>
-              <p className="text-[var(--color-bg)] opacity-70 max-w-[400px]">
-                Join the collective. Your expertise strengthens the whole.
+              <p className="opacity-70 max-w-[400px]">
+                Join the COX Coop. Your expertise strengthens the whole.
                 No observers. Only participants.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-[var(--space-3)]">
-              <button className="brutal-btn bg-[var(--color-bg)] text-[var(--color-text)] border-[var(--color-bg)]">
+              <button className="brutal-btn bg-[var(--color-bg)] text-[var(--color-text)] border-[var(--color-bg)] hover:bg-[var(--color-accent)] hover:border-[var(--color-accent)] hover:text-[var(--color-bg)]">
                 Submit Feedback
               </button>
               <button className="brutal-btn border-[var(--color-bg)] text-[var(--color-bg)] bg-transparent hover:bg-[var(--color-bg)] hover:text-[var(--color-text)]">
@@ -282,31 +363,36 @@ export default function Home() {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-[var(--space-4)]">
             <div className="flex items-center gap-[var(--space-3)]">
               <div className="w-8 h-8 bg-[var(--color-text)] flex items-center justify-center">
-                <span className="text-[var(--color-bg)] font-bold text-sm font-display">C</span>
+                <span className="text-[var(--color-bg)] font-bold text-sm font-display">A</span>
               </div>
-              <span className="text-[var(--text-xs)] uppercase tracking-[0.15em]">
-                Creator Digital Business
-              </span>
+              <div>
+                <span className="text-[var(--text-xs)] uppercase tracking-[0.15em] block">
+                  AI Digital Creator Hub
+                </span>
+                <span className="text-[var(--text-xs)] text-[var(--color-muted)]">
+                  {new Date().getFullYear()}
+                </span>
+              </div>
             </div>
 
-            <p className="text-[var(--text-xs)] text-[var(--color-muted)]">
-              Nothing moves forward without solutions.
+            <p className="text-[var(--text-xs)] text-[var(--color-muted)] max-w-[300px]">
+              Nothing moves forward without solutions. Built by creators, for creators.
             </p>
 
             <div className="flex items-center gap-[var(--space-4)]">
               <a
                 href="#"
-                className="text-[var(--text-xs)] uppercase tracking-widest text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors"
+                className="text-[var(--text-xs)] uppercase tracking-widest text-[var(--color-muted)] hover:text-[var(--color-accent)] transition-colors hover-underline"
                 aria-label="X (formerly Twitter)"
               >
                 X
               </a>
               <a
-                href="#"
-                className="text-[var(--text-xs)] uppercase tracking-widest text-[var(--color-muted)] hover:text-[var(--color-text)] transition-colors"
+                href="https://github.com/JoeProAI/AI-Creator-Digital-Business"
+                className="text-[var(--text-xs)] uppercase tracking-widest text-[var(--color-muted)] hover:text-[var(--color-accent)] transition-colors hover-underline"
                 aria-label="GitHub"
               >
-                GH
+                GitHub
               </a>
             </div>
           </div>
