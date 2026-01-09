@@ -69,36 +69,52 @@ export async function getCreatorRoster(): Promise<Creator[]> {
 
   if (data.length <= 1) return []; // Only header row or empty
 
-  // Skip header row
-  return data.slice(1).map((row) => ({
-    userName: row[0] || '',
-    handle: row[1] || '',
-    contentType: row[2] || '',
-    focusArea: row[3] || '',
-    openForCollab: row[4] || '',
-    collabExpectations: row[5] || '',
-    collabTopics: row[6] || '',
-    specialties: row[7] || '',
-    willingToFacilitate: row[8] || '',
-    issue: row[9] || '',
-    proposedSolution: row[10] || '',
-  }));
+  // Skip header row and filter out empty/invalid rows
+  return data
+    .slice(1)
+    .filter((row) => {
+      // Must have at least a username or handle with actual content
+      const hasUserName = row[0] && row[0].trim() !== '' && !row[0].includes('User Name');
+      const hasHandle = row[1] && row[1].trim() !== '' && !row[1].includes('Handel') && !row[1].includes('Handle');
+      return hasUserName || hasHandle;
+    })
+    .map((row) => ({
+      userName: row[0] || '',
+      handle: row[1] || '',
+      contentType: row[2] || '',
+      focusArea: row[3] || '',
+      openForCollab: row[4] || '',
+      collabExpectations: row[5] || '',
+      collabTopics: row[6] || '',
+      specialties: row[7] || '',
+      willingToFacilitate: row[8] || '',
+      issue: row[9] || '',
+      proposedSolution: row[10] || '',
+    }));
 }
 
 export async function getSheetStats(): Promise<SheetStats> {
-  // Fetch all sheets in parallel
-  const [roster, feedback, tips, vision] = await Promise.all([
-    fetchSheetData(SHEETS.ROSTER),
+  // Fetch roster to count real creators
+  const creators = await getCreatorRoster();
+
+  // Fetch response sheets
+  const [feedback, tips, vision] = await Promise.all([
     fetchSheetData(SHEETS.FEEDBACK),
     fetchSheetData(SHEETS.TIPS),
     fetchSheetData(SHEETS.VISION),
   ]);
 
+  // Filter out header rows and empty rows for counts
+  const countValidRows = (data: string[][]) => {
+    if (data.length <= 1) return 0;
+    return data.slice(1).filter(row => row.some(cell => cell && cell.trim() !== '')).length;
+  };
+
   return {
-    creatorCount: Math.max(0, roster.length - 1), // Subtract header row
-    feedbackCount: Math.max(0, feedback.length - 1),
-    tipsCount: Math.max(0, tips.length - 1),
-    visionCount: Math.max(0, vision.length - 1),
+    creatorCount: creators.length,
+    feedbackCount: countValidRows(feedback),
+    tipsCount: countValidRows(tips),
+    visionCount: countValidRows(vision),
   };
 }
 
