@@ -2,6 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import SubmitModal from './SubmitModal';
+
+type ModalType = 'feedback' | 'tip' | 'vision' | null;
 
 interface HomeClientProps {
   stats: {
@@ -16,6 +19,7 @@ export default function HomeClient({ stats }: HomeClientProps) {
   const [passedSections, setPassedSections] = useState<Set<string>>(new Set());
   const [isLoaded, setIsLoaded] = useState(false);
   const [currentTime, setCurrentTime] = useState('');
+  const [modalType, setModalType] = useState<ModalType>(null);
   const sectionsRef = useRef<Map<string, HTMLElement>>(new Map());
 
   // Trigger entrance animations on mount
@@ -103,7 +107,10 @@ export default function HomeClient({ stats }: HomeClientProps) {
               </Link>
             </nav>
 
-            <button className={`brutal-btn brutal-btn-primary ${isLoaded ? 'animate-slide-in delay-3' : 'will-animate'}`}>
+            <button
+              onClick={() => setModalType('feedback')}
+              className={`brutal-btn brutal-btn-primary ${isLoaded ? 'animate-slide-in delay-3' : 'will-animate'}`}
+            >
               Submit
             </button>
           </div>
@@ -211,7 +218,10 @@ export default function HomeClient({ stats }: HomeClientProps) {
                 Submit issues paired with proposed fixes. No complaint advances without a path forward.
                 Weekly themed submissions to the COX Coop.
               </p>
-              <button className="brutal-btn w-full justify-between group/btn">
+              <button
+                onClick={() => setModalType('feedback')}
+                className="brutal-btn w-full justify-between group/btn"
+              >
                 <span>Submit feedback</span>
                 <span className="transform group-hover/btn:translate-x-2 transition-transform">&rarr;</span>
               </button>
@@ -235,7 +245,10 @@ export default function HomeClient({ stats }: HomeClientProps) {
                 Share what works. Platform expertise, workflow optimizations, tool configurations.
                 Inform COX Coop planning through shared intelligence.
               </p>
-              <button className="brutal-btn w-full justify-between group/btn">
+              <button
+                onClick={() => setModalType('tip')}
+                className="brutal-btn w-full justify-between group/btn"
+              >
                 <span>Share knowledge</span>
                 <span className="transform group-hover/btn:translate-x-2 transition-transform">&rarr;</span>
               </button>
@@ -259,7 +272,10 @@ export default function HomeClient({ stats }: HomeClientProps) {
                 Declare intentions publicly. Find partners. Track progress together.
                 Shared commitment creates momentum.
               </p>
-              <button className="brutal-btn w-full justify-between group/btn">
+              <button
+                onClick={() => setModalType('vision')}
+                className="brutal-btn w-full justify-between group/btn"
+              >
                 <span>Set your vision</span>
                 <span className="transform group-hover/btn:translate-x-2 transition-transform">&rarr;</span>
               </button>
@@ -362,10 +378,16 @@ export default function HomeClient({ stats }: HomeClientProps) {
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-[var(--space-3)]">
-              <button className="brutal-btn bg-[var(--color-bg)] text-[var(--color-text)] border-[var(--color-bg)] hover:bg-[var(--color-accent)] hover:border-[var(--color-accent)] hover:text-[var(--color-bg)]">
+              <button
+                onClick={() => setModalType('feedback')}
+                className="brutal-btn bg-[var(--color-bg)] text-[var(--color-text)] border-[var(--color-bg)] hover:bg-[var(--color-accent)] hover:border-[var(--color-accent)] hover:text-[var(--color-bg)]"
+              >
                 Submit Feedback
               </button>
-              <button className="brutal-btn border-[var(--color-bg)] text-[var(--color-bg)] bg-transparent hover:bg-[var(--color-bg)] hover:text-[var(--color-text)]">
+              <button
+                onClick={() => setModalType('tip')}
+                className="brutal-btn border-[var(--color-bg)] text-[var(--color-bg)] bg-transparent hover:bg-[var(--color-bg)] hover:text-[var(--color-text)]"
+              >
                 Share a Tip
               </button>
             </div>
@@ -414,6 +436,11 @@ export default function HomeClient({ stats }: HomeClientProps) {
           </div>
         </div>
       </footer>
+
+      {/* Submit Modal */}
+      {modalType && (
+        <SubmitModal type={modalType} onClose={() => setModalType(null)} />
+      )}
     </div>
   );
 }
