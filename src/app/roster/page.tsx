@@ -3,8 +3,35 @@ import Link from 'next/link';
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
-export default async function RosterPage() {
-  const creators = await getCreatorRoster();
+const CATEGORIES = [
+  { name: 'Written Content', code: 'WRT' },
+  { name: 'Digital Music', code: 'MUS' },
+  { name: 'Digital Image', code: 'IMG' },
+  { name: 'Video / Animation', code: 'VID' },
+  { name: 'Software & Dev', code: 'DEV' },
+  { name: 'Organization', code: 'ORG' },
+  { name: 'Education', code: 'EDU' },
+  { name: 'Digital Business', code: 'BIZ' },
+  { name: 'Marketing & PR', code: 'MKT' },
+  { name: 'Voice / Audio', code: 'AUD' },
+  { name: 'Automation', code: 'AUT' },
+];
+
+interface PageProps {
+  searchParams: Promise<{ category?: string }>;
+}
+
+export default async function RosterPage({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const categoryFilter = params.category || '';
+  const allCreators = await getCreatorRoster();
+
+  // Filter by category if provided
+  const creators = categoryFilter
+    ? allCreators.filter(c =>
+        c.contentType?.toLowerCase().includes(categoryFilter.toLowerCase())
+      )
+    : allCreators;
 
   return (
     <div className="min-h-screen">
@@ -36,13 +63,16 @@ export default async function RosterPage() {
       {/* Page Content */}
       <main className="max-w-[1400px] mx-auto px-[var(--space-4)] md:px-[var(--space-6)] py-[var(--space-8)]">
         {/* Page Header */}
-        <div className="flex items-start justify-between mb-[var(--space-8)] flex-wrap gap-4">
+        <div className="flex items-start justify-between mb-[var(--space-6)] flex-wrap gap-4">
           <div>
             <h1 className="font-display text-[var(--text-2xl)] md:text-[clamp(2rem,5vw,3rem)] mb-[var(--space-2)]">
               Creator Roster
+              {categoryFilter && (
+                <span className="text-[var(--color-accent)]"> / {categoryFilter}</span>
+              )}
             </h1>
             <p className="text-[var(--color-muted)]">
-              {creators.length} creators registered in the COX Coop
+              {creators.length} creator{creators.length !== 1 ? 's' : ''} {categoryFilter ? `in ${categoryFilter}` : 'registered in the COX Coop'}
             </p>
           </div>
           <span className="brutal-label brutal-label-accent">
@@ -50,16 +80,52 @@ export default async function RosterPage() {
           </span>
         </div>
 
+        {/* Category Filters */}
+        <div className="flex flex-wrap gap-[var(--space-2)] mb-[var(--space-8)]">
+          <Link
+            href="/roster"
+            className={`brutal-btn text-[var(--text-xs)] py-[var(--space-2)] px-[var(--space-3)] ${!categoryFilter ? 'brutal-btn-primary' : ''}`}
+          >
+            All
+          </Link>
+          {CATEGORIES.map((cat) => (
+            <Link
+              key={cat.code}
+              href={`/roster?category=${encodeURIComponent(cat.name)}`}
+              className={`brutal-btn text-[var(--text-xs)] py-[var(--space-2)] px-[var(--space-3)] ${categoryFilter === cat.name ? 'brutal-btn-primary' : ''}`}
+            >
+              <span className="text-[var(--color-muted)]">[{cat.code}]</span>
+              <span>{cat.name}</span>
+            </Link>
+          ))}
+        </div>
+
         {/* Roster Grid */}
         {creators.length === 0 ? (
           <div className="brutal-card text-center py-[var(--space-12)]">
-            <div className="text-[var(--text-2xl)] font-display mb-[var(--space-3)]">No Creators Yet</div>
+            <div className="text-[var(--text-2xl)] font-display mb-[var(--space-3)]">
+              {categoryFilter ? `No Creators in ${categoryFilter}` : 'No Creators Yet'}
+            </div>
             <p className="text-[var(--color-muted)] mb-[var(--space-6)]">
-              The roster is empty. Be the first to join the COX Coop!
+              {categoryFilter
+                ? 'No creators found in this category. Try another filter or view all.'
+                : 'The roster is empty. Be the first to join the COX Coop!'}
             </p>
-            <p className="text-[var(--text-sm)] text-[var(--color-muted)]">
-              If you&apos;ve already registered, the sheet may need to be set to public view access.
-            </p>
+            <div className="flex justify-center gap-[var(--space-3)]">
+              {categoryFilter && (
+                <Link href="/roster" className="brutal-btn">
+                  View All
+                </Link>
+              )}
+              <a
+                href="https://forms.gle/tutbWMinipTX3UHF6"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="brutal-btn brutal-btn-primary"
+              >
+                Join the Roster
+              </a>
+            </div>
           </div>
         ) : (
           <div className="grid gap-[var(--space-4)] md:grid-cols-2 lg:grid-cols-3">

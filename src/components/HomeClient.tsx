@@ -152,9 +152,14 @@ export default function HomeClient({ stats }: HomeClientProps) {
               </p>
 
               <div className={`flex flex-wrap gap-[var(--space-3)] mt-[var(--space-6)] ${isLoaded ? 'animate-slide-up delay-3' : 'will-animate'}`}>
-                <button className="brutal-btn brutal-btn-primary">
+                <a
+                  href={FORMS.roster}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="brutal-btn brutal-btn-primary"
+                >
                   Get Started
-                </button>
+                </a>
                 <Link href="/roster" className="brutal-btn">
                   View Roster
                 </Link>
@@ -322,14 +327,15 @@ export default function HomeClient({ stats }: HomeClientProps) {
               { name: 'Automation', code: 'AUT', hot: false },
               { name: 'Other', code: '...', hot: false },
             ].map((cat) => (
-              <button
+              <Link
                 key={cat.code}
+                href={`/roster?category=${encodeURIComponent(cat.name)}`}
                 className={`brutal-btn text-[var(--text-xs)] py-[var(--space-2)] px-[var(--space-3)] ${cat.hot ? 'border-[var(--color-accent)]' : ''}`}
               >
                 <span className={cat.hot ? 'text-[var(--color-accent)]' : 'text-[var(--color-muted)]'}>[{cat.code}]</span>
                 <span>{cat.name}</span>
                 {cat.hot && <span className="w-1.5 h-1.5 bg-[var(--color-accent)] animate-pulse" />}
-              </button>
+              </Link>
             ))}
           </div>
         </div>
