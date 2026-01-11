@@ -340,12 +340,12 @@ export default function HomeClient({ stats }: HomeClientProps) {
             ].map((item, index) => (
               <div
                 key={item.step}
-                className={`relative group hover-lift cursor-default ${item.active ? 'brutal-card brutal-shadow' : ''}`}
+                className={`relative group hover-lift cursor-default p-[var(--space-4)] border-[2px] ${item.active ? 'border-[var(--color-border)] bg-[var(--color-surface)] brutal-shadow' : 'border-transparent'}`}
               >
-                <div className={`text-[var(--text-hero)] font-display opacity-20 absolute -top-4 -left-2 transition-colors ${item.active ? 'text-[var(--color-accent)]' : 'text-[var(--color-border)]'} group-hover:text-[var(--color-accent)]`}>
+                <div className={`text-[clamp(2rem,6vw,4rem)] font-display opacity-20 absolute top-0 left-2 transition-colors ${item.active ? 'text-[var(--color-accent)]' : 'text-[var(--color-border)]'} group-hover:text-[var(--color-accent)]`}>
                   {item.step}
                 </div>
-                <div className="relative pt-[var(--space-8)]">
+                <div className="relative pt-[var(--space-6)]">
                   <div className="flex items-center gap-2 mb-[var(--space-2)]">
                     <h3 className="text-[var(--text-lg)] font-semibold">{item.title}</h3>
                     {item.active && <span className="brutal-label brutal-label-accent text-[10px]">Current</span>}
