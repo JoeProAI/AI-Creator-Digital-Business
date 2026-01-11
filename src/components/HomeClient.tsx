@@ -216,7 +216,7 @@ export default function HomeClient({ stats }: HomeClientProps) {
               id="feedback"
               ref={registerSection('01')}
               data-section="01"
-              className={`section-marker p-[var(--space-6)] group ${passedSections.has('01') ? 'is-passed' : ''}`}
+              className={`section-marker p-[var(--space-6)] group flex flex-col ${passedSections.has('01') ? 'is-passed' : ''}`}
             >
               <div className="text-[var(--text-xs)] uppercase tracking-[0.3em] text-[var(--color-muted)] mb-[var(--space-3)] flex items-center justify-between">
                 <span>01 / Feedback</span>
@@ -225,7 +225,7 @@ export default function HomeClient({ stats }: HomeClientProps) {
               <h2 className="font-display text-[var(--text-2xl)] mb-[var(--space-3)] group-hover:translate-x-1 transition-transform">
                 Problems<br />&amp; Solutions
               </h2>
-              <p className="text-[var(--color-muted)] mb-[var(--space-6)] leading-relaxed">
+              <p className="text-[var(--color-muted)] mb-[var(--space-6)] leading-relaxed flex-grow">
                 Submit issues paired with proposed fixes. No complaint advances without a path forward.
                 Weekly themed submissions to the COX Coop.
               </p>
@@ -233,7 +233,7 @@ export default function HomeClient({ stats }: HomeClientProps) {
                 href={FORMS.roster}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="brutal-btn w-full justify-between group/btn"
+                className="brutal-btn w-full justify-between group/btn mt-auto"
               >
                 <span>Submit feedback</span>
                 <span className="transform group-hover/btn:translate-x-2 transition-transform">&rarr;</span>
@@ -245,7 +245,7 @@ export default function HomeClient({ stats }: HomeClientProps) {
               id="tips"
               ref={registerSection('02')}
               data-section="02"
-              className={`section-marker p-[var(--space-6)] group ${passedSections.has('02') ? 'is-passed' : ''}`}
+              className={`section-marker p-[var(--space-6)] group flex flex-col ${passedSections.has('02') ? 'is-passed' : ''}`}
             >
               <div className="text-[var(--text-xs)] uppercase tracking-[0.3em] text-[var(--color-muted)] mb-[var(--space-3)] flex items-center justify-between">
                 <span>02 / Knowledge</span>
@@ -254,7 +254,7 @@ export default function HomeClient({ stats }: HomeClientProps) {
               <h2 className="font-display text-[var(--text-2xl)] mb-[var(--space-3)] group-hover:translate-x-1 transition-transform">
                 Tips<br />&amp; Tricks
               </h2>
-              <p className="text-[var(--color-muted)] mb-[var(--space-6)] leading-relaxed">
+              <p className="text-[var(--color-muted)] mb-[var(--space-6)] leading-relaxed flex-grow">
                 Share what works. Platform expertise, workflow optimizations, tool configurations.
                 Inform COX Coop planning through shared intelligence.
               </p>
@@ -262,7 +262,7 @@ export default function HomeClient({ stats }: HomeClientProps) {
                 href={FORMS.tips}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="brutal-btn w-full justify-between group/btn"
+                className="brutal-btn w-full justify-between group/btn mt-auto"
               >
                 <span>Share knowledge</span>
                 <span className="transform group-hover/btn:translate-x-2 transition-transform">&rarr;</span>
@@ -274,7 +274,7 @@ export default function HomeClient({ stats }: HomeClientProps) {
               id="vision"
               ref={registerSection('03')}
               data-section="03"
-              className={`section-marker p-[var(--space-6)] group ${passedSections.has('03') ? 'is-passed' : ''}`}
+              className={`section-marker p-[var(--space-6)] group flex flex-col ${passedSections.has('03') ? 'is-passed' : ''}`}
             >
               <div className="text-[var(--text-xs)] uppercase tracking-[0.3em] text-[var(--color-muted)] mb-[var(--space-3)] flex items-center justify-between">
                 <span>03 / Accountability</span>
@@ -283,7 +283,7 @@ export default function HomeClient({ stats }: HomeClientProps) {
               <h2 className="font-display text-[var(--text-2xl)] mb-[var(--space-3)] group-hover:translate-x-1 transition-transform">
                 Vision<br />Board
               </h2>
-              <p className="text-[var(--color-muted)] mb-[var(--space-6)] leading-relaxed">
+              <p className="text-[var(--color-muted)] mb-[var(--space-6)] leading-relaxed flex-grow">
                 Declare intentions publicly. Find partners. Track progress together.
                 Shared commitment creates momentum.
               </p>
@@ -291,7 +291,7 @@ export default function HomeClient({ stats }: HomeClientProps) {
                 href={FORMS.vision}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="brutal-btn w-full justify-between group/btn"
+                className="brutal-btn w-full justify-between group/btn mt-auto"
               >
                 <span>Set your vision</span>
                 <span className="transform group-hover/btn:translate-x-2 transition-transform">&rarr;</span>

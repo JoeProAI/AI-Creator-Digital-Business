@@ -113,16 +113,9 @@ export async function getCreatorRoster(): Promise<Creator[]> {
         !handle.toLowerCase().includes('handel') &&
         !handle.toLowerCase().includes('handle');
 
-      // Must have at least one valid identifier
-      if (!hasValidUserName && !hasValidHandle) return false;
-
-      // Check row has real content beyond just "FALSE" checkbox defaults
-      const hasRealContent = row.some(cell => {
-        if (!cell || cell.trim() === '') return false;
-        return cell.trim().toUpperCase() !== 'FALSE';
-      });
-
-      return hasRealContent;
+      // Must have at least one valid identifier (username or handle)
+      // The username/handle itself counts as real content
+      return hasValidUserName || hasValidHandle;
     })
     .map((row) => ({
       userName: cols.userName >= 0 ? row[cols.userName] || '' : '',
