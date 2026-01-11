@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { AnalyticsData, exportToCSV } from '@/lib/analytics';
 
 // Simple password - in production, use environment variable
-const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'coxcoop2026';
+const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'CC2026!';
 
 interface Props {
   initialData: AnalyticsData;
