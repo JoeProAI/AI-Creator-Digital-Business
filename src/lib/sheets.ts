@@ -67,7 +67,7 @@ async function fetchSheetData(sheetName: string, range: string = 'A:Z'): Promise
 export async function getCreatorRoster(): Promise<Creator[]> {
   const data = await fetchSheetData(SHEETS.ROSTER);
 
-  if (data.length < 5) return []; // Need at least header row (4) + 1 data row
+  if (data.length < 2) return []; // Need at least header row + 1 data row
 
   // Find the header row (contains "User Name" in some column)
   const headerRowIndex = data.findIndex(row =>
