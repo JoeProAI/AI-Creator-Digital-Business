@@ -5,12 +5,12 @@ const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_SHEETS_API_KEY;
 
 // Sheet tab names - exact match with emojis as they appear in the sheet
 const SHEETS = {
-  ROSTER: 'Creator Roster 🧑‍🦲📋',
-  FEEDBACK: 'Feedback Responses 🔥',
-  TIPS: 'Tips Responses 💡',
-  VISION: 'Vision Responses 🎨',
+  ROSTER: 'COX COOP Creator Roster🔥',
+  FEEDBACK: 'Weekly Feedback & Solutions to X Team 🔥',
+  TIPS: 'Tips & Tricks for being a Creator on X 💡',
+  VISION: 'Vision, Intentions & Accountability 🌌🎨',
   SCHEDULE: 'Schedule 🗓️',
-  MATCHUP: 'Match Up for Collaborations 🤝',
+  AWARDS: 'COX COOP B.U.M.P. vs D.U.M.P. Awards 🏆🗑️',
   DASHBOARD: 'Dashboard 🪐',
   SHEET_FEEDBACK: 'Feedback for this sheet 📣',
 } as const;
